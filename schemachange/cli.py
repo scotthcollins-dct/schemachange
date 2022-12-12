@@ -458,11 +458,10 @@ def get_all_scripts_recursively(root_directory, verbose):
 
       all_files[script_name] = script
 
-      # Throw an error if the same version exists more than once
+      # Add only if not in list
       if script_type == 'V':
-        if script['script_version'] in all_versions:
-          raise ValueError("The script version %s exists more than once (second instance %s)" % (script['script_version'], script['script_full_path']))
-        all_versions.append(script['script_version'])
+        if script['script_version'] not in all_versions:
+          all_versions.append(script['script_version'])
 
   return all_files
 
