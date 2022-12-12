@@ -219,6 +219,7 @@ def deploy_command(config):
     # Apply a versioned-change script only if the version is newer than the most recent change in the database
     # Apply any other scripts, i.e. repeatable scripts, irrespective of the most recent change in the database
     scriptVersion = fetch_script_version(change_history_table, snowflake_session_parameters, config['autocommit'], config['verbose'], script['script_name'])
+    print(f"script version {scriptVersion}")
     if script_name[0] == 'V' and scriptVersion != 'none': 
       if get_alphanum_key(script['script_version']) <= get_alphanum_key(scriptVersion):
         if config['verbose']:
@@ -640,7 +641,7 @@ def fetch_script_version(change_history_table, snowflake_session_parameters, aut
   query = "SELECT VERSION FROM {0}.{1} WHERE SCRIPT_TYPE = 'V' AND SCRIPT = '{2}' AND STATUS = 'Success' ORDER BY INSTALLED_ON DESC LIMIT 1".format(change_history_table['schema_name'], change_history_table['table_name'], script_name)
   results = execute_snowflake_query(change_history_table['database_name'], query, snowflake_session_parameters, autocommit, verbose)
   
-  if results is None:
+  if len(results) <= 0:
     results = 'none'
 
   return results
