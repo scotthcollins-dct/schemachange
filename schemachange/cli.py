@@ -641,7 +641,7 @@ def fetch_script_version(change_history_table, snowflake_session_parameters, aut
   results = execute_snowflake_query(change_history_table['database_name'], query, snowflake_session_parameters, autocommit, verbose)
   
   if results is None:
-    results = "V0"
+    results = "0"
 
   return results
 
