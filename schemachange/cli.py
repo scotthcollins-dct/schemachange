@@ -224,7 +224,7 @@ def deploy_command(config):
       print(f"tabled script version = {scriptVersion}") 
       if get_alphanum_key(script['script_version']) <= get_alphanum_key(scriptVersion):
         if config['verbose']:
-          print("Skipping change script %s because it's older than the most recently applied change (%s)" % (script['script_name'], max_published_version))
+          print("Skipping change script %s because it's older than or equal to the most recently applied change (%s)" % (script['script_name'], scriptVersion))
         scripts_skipped += 1
         continue
 
