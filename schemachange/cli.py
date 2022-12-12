@@ -219,9 +219,10 @@ def deploy_command(config):
     # Apply a versioned-change script only if the version is newer than the most recent change in the database
     # Apply any other scripts, i.e. repeatable scripts, irrespective of the most recent change in the database
     if script_name[0] == 'V' and get_alphanum_key(script['script_version']) <= get_alphanum_key(max_published_version):
-      if config['verbose']:
-        print("Skipping change script %s because it's older than the most recently applied change (%s)" % (script['script_name'], max_published_version))
-      scripts_skipped += 1
+      if script['script_name'] == all_scripts[script_name]['script_name']:
+        if config['verbose']:
+          print("Skipping change script %s because it's older than the most recently applied change (%s)" % (script['script_name'], max_published_version))
+        scripts_skipped += 1
       continue
 
     # Always process with jinja engine
