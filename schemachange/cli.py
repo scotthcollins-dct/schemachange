@@ -220,11 +220,11 @@ def deploy_command(config):
     # Apply any other scripts, i.e. repeatable scripts, irrespective of the most recent change in the database
     scriptVersion = None
     scriptVersion = fetch_script_version(change_history_table, snowflake_session_parameters, config['autocommit'], config['verbose'], script['script_name'])
-    if script_name[0] == 'V' and get_alphanum_key(script['script_version']) <= get_alphanum_key(scriptVersion):
-      if config['verbose']:
-        print("Skipping change script %s because it's older than the most recently applied change (%s)" % (script['script_name'], max_published_version))
-      scripts_skipped += 1
-      continue
+   # if script_name[0] == 'V' and get_alphanum_key(script['script_version']) <= get_alphanum_key(scriptVersion):
+   #   if config['verbose']:
+   #     print("Skipping change script %s because it's older than the most recently applied change (%s)" % (script['script_name'], max_published_version))
+   #   scripts_skipped += 1
+   #   continue
 
     # Always process with jinja engine
     jinja_processor = JinjaTemplateProcessor(project_root = config['root-folder'], modules_folder = config['modules-folder'])
@@ -642,6 +642,7 @@ def fetch_script_version(change_history_table, snowflake_session_parameters, aut
   
   if results is None:
     results = "0"
+    print ("The value is zero")
 
   return results
 
