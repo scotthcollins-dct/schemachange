@@ -220,7 +220,7 @@ def deploy_command(config):
     # Apply any other scripts, i.e. repeatable scripts, irrespective of the most recent change in the database
     scriptVersion = None
     scriptVersion = fetch_script_version(change_history_table, snowflake_session_parameters, config['autocommit'], config['verbose'], script['script_name'])
-    if script_name[0] == 'V' and get_alphanum_key(script['script_version']) <= get_alphanum_key(scriptVersion[0]):
+    if script_name[0] == 'V' and get_alphanum_key(script['script_version']) <= get_alphanum_key(scriptVersion):
       if config['verbose']:
         print("Skipping change script %s because it's older than the most recently applied change (%s)" % (script['script_name'], max_published_version))
       scripts_skipped += 1
@@ -637,16 +637,13 @@ def fetch_change_history(change_history_table, snowflake_session_parameters, aut
   return change_history
 
 def fetch_script_version(change_history_table, snowflake_session_parameters, autocommit, verbose, script_name):
-  query = "SELECT VERSION FROM {0}.{1} WHERE SCRIPT_TYPE = 'V' AND SCRIPT = '{2}' ORDER BY INSTALLED_ON DESC LIMIT 1".format(change_history_table['schema_name'], change_history_table['table_name'], script_name)
+  query = "SELECT VERSION FROM {0}.{1} WHERE SCRIPT_TYPE = 'V' AND SCRIPT = '{2}' AND STATUS = 'Success' ORDER BY INSTALLED_ON DESC LIMIT 1".format(change_history_table['schema_name'], change_history_table['table_name'], script_name)
   results = execute_snowflake_query(change_history_table['database_name'], query, snowflake_session_parameters, autocommit, verbose)
+  
+  if results is None:
+    results = "V0"
 
-  # Collect all the results into a list
-  change_history = list()
-  for cursor in results:
-    for row in cursor:
-      change_history.append(row[0])
-
-  return change_history
+  return results
 
 def apply_change_script(script, script_content, vars, default_database, change_history_table, snowflake_session_parameters, autocommit, verbose):
   # Define a few other change related variables
