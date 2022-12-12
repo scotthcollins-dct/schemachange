@@ -460,8 +460,9 @@ def get_all_scripts_recursively(root_directory, verbose):
 
       # Add only if not in list
       if script_type == 'V':
-        if script['script_version'] not in all_versions:
-          all_versions.append(script['script_version'])
+        if script['script_full_path'] not in all_files[script_name]['script_full_path']:
+          if script['script_version'] not in all_versions:
+            all_versions.append(script['script_version'])
 
   return all_files
 
