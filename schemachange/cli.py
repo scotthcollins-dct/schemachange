@@ -218,8 +218,9 @@ def deploy_command(config):
 
     # Apply a versioned-change script only if the version is newer than the most recent change in the database
     # Apply any other scripts, i.e. repeatable scripts, irrespective of the most recent change in the database
+    scriptVersion = None
     scriptVersion = fetch_script_version(change_history_table, snowflake_session_parameters, config['autocommit'], config['verbose'], script['script_name'])
-    if script_name[0] == 'V' and get_alphanum_key(script['script_version']) <= get_alphanum_key(scriptVersion):
+    if script_name[0] == 'V' and get_alphanum_key(script['script_version']) <= get_alphanum_key(scriptVersion[0]):
       if config['verbose']:
         print("Skipping change script %s because it's older than the most recently applied change (%s)" % (script['script_name'], max_published_version))
       scripts_skipped += 1
