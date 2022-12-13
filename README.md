@@ -4,6 +4,12 @@
 *Looking for snowchange? You've found the right spot. snowchange has been renamed to schemachange.*
 
 ## Overview
+*** 
+This fork was to removed the restriction of one version number per deployment payload as we have multiple scripts under one root where the version might be repeated, say V1.0.0.0 for new installs.
+Also added a db call to verify the version about to run is > that logged in the change_history table by script name.
+This prevents GitHub from being mucked up with multiple manually created versions of the same file over the duration/lifecycle of the development of the application.
+Our ADO Pipeline creates a payload based on the core files:  V1.0.0.0 AND versions whatever file GitHub logs as a changed file for that build to create a complete payload for deployment/release/rebuilds.
+***
 
 schemachange is a simple python based tool to manage all of your [Snowflake](https://www.snowflake.com/) objects. It follows an Imperative-style approach to Database Change Management (DCM) and was inspired by the [Flyway database migration tool](https://flywaydb.org). When combined with a version control system and a CI/CD tool, database changes can be approved and deployed through a pipeline using modern software delivery practices. As such schemachange plays a critical role in enabling Database (or Data) DevOps.
 
