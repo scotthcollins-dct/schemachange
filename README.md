@@ -10,6 +10,7 @@ Also added a db call to verify the version about to run is > that logged in the 
 This prevents GitHub from being mucked up with multiple manually created versions of the same file over the duration/lifecycle of the development of the application.
 Our ADO Pipeline creates a payload based on the core files:  V1.0.0.0 AND versions whatever file GitHub logs as a changed file for that build to create a complete payload for deployment/release/rebuilds.
 There is no real reason to have multiple manually version files in GitHub when GitHub itself tracks changes to a given file in logs + the change_history table should be tracking versions of installs by filename per tenant/snowflake account.
+Our ado pipeline publishes complete install payloads to the build pipeline that is consumed for both reinstalls (truncate the tenants change_history table), new installs, and updates (changes made in core .sql of db object and tracked through GitHub)
 ***
 
 schemachange is a simple python based tool to manage all of your [Snowflake](https://www.snowflake.com/) objects. It follows an Imperative-style approach to Database Change Management (DCM) and was inspired by the [Flyway database migration tool](https://flywaydb.org). When combined with a version control system and a CI/CD tool, database changes can be approved and deployed through a pipeline using modern software delivery practices. As such schemachange plays a critical role in enabling Database (or Data) DevOps.
