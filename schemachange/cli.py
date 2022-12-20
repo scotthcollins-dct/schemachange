@@ -539,7 +539,7 @@ def execute_snowflake_query(snowflake_database, query, snowflake_session_paramet
       print(SecretManager.global_redact("SQL query: %s" % query))
 
   try:
-    res = con.execute_string(query)
+    res = con.execute_string(f"{query}")
     if not autocommit:
       con.commit()
     return res
