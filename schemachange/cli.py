@@ -219,7 +219,9 @@ def deploy_command(config):
     # Apply a versioned-change script only if the version is newer than the most recent change in the database
     # Apply any other scripts, i.e. repeatable scripts, irrespective of the most recent change in the database
     scriptVersions = fetch_script_version(change_history_table, snowflake_session_parameters, config['autocommit'], config['verbose'], script['script_name'])
-    if script_name[0] == 'V' and len(scriptVersions) > 0:
+    checksum_current = hashlib.sha224(content.encode('utf-8')).hexdigest()
+    checksum_last = list(r_scripts_checksum.loc[r_scripts_checksum['script_name'] == script_name, 'checksum'])[0]
+    if script_name[0] == 'V' and len(scriptVersions) > 0 and checksum_current != checksum_last :
       scriptVersion = scriptVersions[0]
       print(f"tabled script version = {scriptVersion}") 
       if get_alphanum_key(script['script_version']) <= get_alphanum_key(scriptVersion):
